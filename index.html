@@ -482,7 +482,8 @@ $('buy-btn').addEventListener('click', ()=>{
 /* ---------- End. / True End. + the text to copy ---------- */
 function setShare(isTrue){
   $('share-title').textContent = isTrue ? 'True End.' : 'End.';
-  const lines = (isTrue ? ['「！」'] : []).concat([Q+'紙とペン'+Q+'を購入して手紙を書きました。', '#紙とペン']).concat(HONPEN_URL ? [HONPEN_URL] : []);
+  const lines = (isTrue ? ['「！」', Q+'紙とペン'+Q+'を購入して友人に手紙を送りました。']
+                        : [Q+'紙とペン'+Q+'を購入しました。']).concat(['#紙とペン']).concat(HONPEN_URL ? [HONPEN_URL] : []);
   $('share-text').value = lines.join('\n');
   $('rebuy-row').style.display = isTrue ? 'none' : 'block';
   $('share').classList.add('show');
