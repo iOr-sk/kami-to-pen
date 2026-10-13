@@ -124,7 +124,7 @@ body.te-seen .howto-true{display:block;}
 .copy-msg{font-size:.78rem; margin-top:6px; min-height:1.2em; opacity:.75;}
 
 /* ---- 遊び方 / ヒント: tabs on the left edge, panels slide in like a menu ---- */
-.side-tabs{position:fixed; left:0; top:50%; transform:translateY(-50%); z-index:40; display:flex; flex-direction:column; gap:10px;}
+.side-tabs{position:fixed; left:0; top:calc(env(safe-area-inset-top,0px) + 56px); transform:none; z-index:40; display:flex; flex-direction:column; gap:10px;}
 .side-tab{transition:background-color 2.4s ease, color 2.4s ease, border-color 2.4s ease; writing-mode:vertical-rl; letter-spacing:.35em; font:inherit; font-size:.76rem; color:var(--ink); cursor:pointer;
   padding:14px 4px 10px; line-height:1.4; background:rgba(255,255,255,.94); border:1px solid var(--line); border-left:0; border-radius:0 10px 10px 0;
   box-shadow:2px 2px 10px rgba(0,0,0,.06);}
@@ -288,7 +288,7 @@ img{-webkit-touch-callout:none; -webkit-user-drag:none; user-select:none; -webki
     </div></div>
   </div>
   <div class="aw-row" id="aw-row"><button class="aw-btn" id="aw-btn" type="button">あとがき(ネタバレ込み)<i class="aw-tri">▼</i></button></div>
-  <div class="afterword" id="afterword"><div class="aw-inner"><div class="aw-text"><p>拝啓</p><p>遊んでいただいた皆さまへ</p><p>この度は『紙とペン』を最後まで遊んでいただきありがとうございました。</p><p>昔、友人に教えてもらった実在するコーヒーショップのサイトに隠しギミックがあったことにものすごく感動して、それをまn…オマージュして今回のweb謎になりました。</p><p>ちなみに、手紙で送られてきた”？”は「(解けるかな)？」、自分(遊んでいただいたあなた)が送った”！”は「(解けたよ)！」という意味です。(これも私が大好きなちっちゃな某名探偵のお話をオマージュしたものです。)</p><p>また、遊ぶ人によっての自由度を演出したかったので、便箋はsorairoシリーズの3種類すべて異なるギミックが発動し、通常End.に出てくる便箋の柄も変わります。もし、1種類しか便箋を選んでいなければ他の便箋も選んで遊んでみてください。最初から”真夜中”便箋を出すことも可能で、その場合は3種類のギミックがランダムに発動します。エンディングは通常End.なしで、スッとTrue End.に移行します。</p><p>インクの色や封筒の色も選べるようになっており、True End.ではご自身の選んだインクの色や封筒の色が反映されています。</p><p>あとは、会社紹介の「L'inutile」はフランス語で「役立たず」という意味らしいです。文章の頭文字を読んでいただくと「このぺえじはなぞときとはかかわりないです」になるので、本当に役立たずなページです。また、小さな鳥をいろんなところに隠したので見つけていただければ幸いです。</p><p>ネタバレと細かすぎるこだわりはこんなところでしょうか。</p><p>改めて、『紙とペン』を遊んでいただきありがとうございました。楽しんでいただけていれば何よりです。</p><p class="aw-sign">敬具</p><p class="aw-sign">いおり より</p></div></div></div>
+  <div class="afterword" id="afterword"><div class="aw-inner"><div class="aw-text"><p>拝啓</p><p>遊んでいただいた皆さまへ</p><p>この度は『紙とペン』を最後まで遊んでいただきありがとうございました。</p><p>昔、友人に教えてもらった実在するコーヒーショップのサイトに隠しギミックがあったことにものすごく感動して、それをまn…オマージュして今回のweb謎になりました。</p><p>ちなみに、手紙で送られてきた”？”は「(解けるかな)？」、自分(遊んでいただいたあなた)が送った”！”は「(解けたよ)！」という意味です。(これも私が大好きなちっちゃな某名探偵のお話をオマージュしたものです。)</p><p>また、遊ぶ人によっての自由度を演出したかったので、便箋はsorairoシリーズの3種類すべて異なるギミックが発動し、通常End.に出てくる便箋の柄も変わります。もし、1種類しか便箋を選んでいなければ他の便箋も選んで遊んでみてください。最初から”真夜中”便箋を出すことも可能で、その場合は3種類のギミックがランダムに発動します。エンディングは通常End.なしで、スッとTrue End.に移行します。</p><p>インクの色や封筒の色も選べるようになっており、True End.ではご自身の選んだインクの色や封筒の色が反映されています。</p><p>あとは、会社紹介の「L'inutile」はフランス語で「役立たず」という意味らしいです。文章の頭文字を読んでいただくと「このぺえじはなぞときとはかかわりないです」になるので、本当に役立たずなページです。また、小さな鳥をいろんなところに隠したので見つけていただければ幸いです。</p><p>ネタバレと細かすぎるこだわりはこんなところでしょうか。</p><p>改めて、『紙とペン』を遊んでいただきありがとうございました。楽しんでいただけていれば何よりです。</p><p class="aw-sign" style="white-space:pre">敬具　　　　　　</p><p class="aw-sign">いおり より</p></div></div></div>
 
   <p class="fiction">このwebサイトの内容はフィクションであり、<br>実在の人物・団体とは一切関係がありません。</p>
 </div>
