@@ -165,6 +165,7 @@ button,input,textarea,select{font-family:inherit;}
 .notice-head .nh-s, .notice-head .nh-e, .notice-head .nh-b{position:absolute; left:0; top:0; opacity:0; transition:opacity .8s ease;}
 .notice-head[data-k="s"] .nh-s, .notice-head[data-k="e"] .nh-e, .notice-head[data-k="b"] .nh-b{opacity:1;}
 .notice-head[data-k]:not([data-k="n"]) .nh-n{opacity:0; transition:opacity 0s .8s;}
+.notice-head[data-k="e"] .nh-e, .notice-head[data-k="e"] .nh-n{transition:none !important;}   /* blue: the pen turns into the eraser at once */
 #pen-site .notice-head .nh{filter:grayscale(1) invert(1);}
 .notice-head .hit{position:absolute; left:3%; width:88%; top:71%; height:36%; z-index:3; touch-action:none; cursor:default; pointer-events:none;}
 .notice-head.show .hit{pointer-events:auto;}
@@ -173,8 +174,8 @@ button,input,textarea,select{font-family:inherit;}
 .eraser{position:absolute; left:0; top:0; height:auto; padding:12px; box-sizing:content-box; translate:-50% -50%; z-index:20; display:none; touch-action:none; cursor:grab;
   user-select:none; -webkit-user-select:none; -webkit-user-drag:none; -webkit-tap-highlight-color:transparent; transition:filter .2s ease, scale .2s ease, rotate .1s ease;}
 .eraser.lift{transition:left .15s ease, top .15s ease, filter .2s ease, scale .2s ease, rotate .1s ease;}
-.eraser.show{display:block; animation:fadein .8s ease;}
-.eraser.drag{cursor:grabbing; scale:1.1; filter:drop-shadow(0 8px 8px rgba(0,0,0,.22));}
+.eraser.show{display:block;}
+.eraser.drag{cursor:grabbing; filter:drop-shadow(0 8px 8px rgba(0,0,0,.22));}
 .tear-zone.show{display:block; animation:fadein .8s ease;}
 .og-scope{position:relative;}
 .og-static-pen{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:min(48vw,360px); height:min(48vw,360px); opacity:.55; pointer-events:none; z-index:-1;}
@@ -1354,7 +1355,7 @@ var ERASER_ONLY=true;                          // a bare finger does not erase t
 var egOn=false, egMoved=false, egDrag=false, egPtr=null, egPrev=null, egTip=null, egGrab={x:0,y:0}, egRaf=0, egLast=null, egInk=0, egCheckAt=0, egW=26;
 const EG_HOME={x:0.855, y:0.885};              // where the tip rests (share of the heading box): right at the cut end of the line
 const EG_TIP={dx:-0.32, dy:0.41};              // the tip's offset from the picture's centre (share of its width / height)
-const EG_LIFT_TOUCH=24;                        // on touch only: the eraser rides this far above the finger so it is not hidden
+const EG_LIFT_TOUCH=0;                         // on touch only: the eraser rides this far above the finger so it is not hidden
 const EG_BRUSH=15;                             // width of the stroke the tip rubs out
 const ERASER=document.createElement('img');
 ERASER.id='p-eraser'; ERASER.className='eraser'; ERASER.alt=''; ERASER.draggable=false; ERASER.src=IMG.eraser;
