@@ -396,6 +396,7 @@ body.p-sub-open #p-loupebtn{pointer-events:none !important; cursor:default;}
 /* pictures cannot be saved (long-press / right-click / drag) — except the keepsake picture at the end */
 img{-webkit-touch-callout:none; -webkit-user-drag:none; user-select:none; -webkit-user-select:none;}
 #keep-img{-webkit-touch-callout:default;}
+html, body{caret-color:transparent;}   /* no blinking text caret anywhere (there are no text boxes on this site) */
 </style>
 </head>
 <body>
@@ -1501,14 +1502,15 @@ function cutPoly(W,H,c){
 }
 function startCut(){
   const sr=paperSite.getBoundingClientRect(), tr=tear.querySelector('.hit').getBoundingClientRect();
-  const hr=tear.getBoundingClientRect(), cutY=hr.top+hr.height*0.945, W=window.innerWidth   /* just below the dashed line (line sits at about 88-92%) */, H=window.innerHeight-cutY;
+  const hr=tear.getBoundingClientRect(), cutY=Math.round(hr.top+hr.height*0.945), W=window.innerWidth;   // just below the dashed line (line sits at about 88-92%)
+  const FULL=Math.max(window.innerHeight, document.documentElement.clientHeight, window.outerHeight||0, (screen&&screen.height)||0)+160, H=FULL-cutY;   // iPhone draws the page under the toolbar too: cover well past the bottom
   const holder=document.createElement('div');
-  holder.style.cssText='position:fixed;left:0;right:0;top:0;bottom:0;z-index:60;pointer-events:none;overflow:hidden;clip-path:inset('+cutY+'px 0 0 0);';
+  holder.style.cssText='position:fixed;left:0;right:0;top:0;height:'+FULL+'px;z-index:60;pointer-events:none;overflow:hidden;clip-path:inset('+cutY+'px 0 0 0);';
   const clone=paperSite.cloneNode(true); cleanIds(clone);
   clone.style.cssText='position:absolute;left:'+sr.left+'px;top:'+sr.top+'px;width:'+sr.width+'px;height:'+sr.height+'px;margin:0;background:#fff;';
   holder.appendChild(clone);
   const under=document.createElement('div');                 // what shows through the cut: the pen shop's colour
-  under.style.cssText='position:fixed;left:0;right:0;top:'+cutY+'px;bottom:0;z-index:59;pointer-events:none;background:#413D3C;';
+  under.style.cssText='position:fixed;left:0;right:0;top:'+cutY+'px;height:'+H+'px;z-index:59;pointer-events:none;background:#413D3C;clip-path:inset(0 0 100% 0);';   // shows only through the cut, so no dark seam along the line
   const ns='http://www.w3.org/2000/svg', svg=document.createElementNS(ns,'svg');
   svg.setAttribute('width',W); svg.setAttribute('height',H);
   svg.style.cssText='position:fixed;left:0;top:'+cutY+'px;z-index:61;pointer-events:none;overflow:hidden;filter:drop-shadow(2px 3px 4px rgba(0,0,0,.18));';
@@ -1516,14 +1518,15 @@ function startCut(){
   tCut={holder, under, svg, flap:svg.querySelector('path'), grad:svg.querySelector('linearGradient'), cutY, W, H, sr, headTop:tear.getBoundingClientRect().top, ready:false};
   loadImgs(clone).then(()=>{ if(!tCut || tCut.holder!==holder) return;
     document.body.appendChild(under); document.body.appendChild(holder); document.body.appendChild(svg);
-    paperSite.style.clipPath='inset(0 0 calc(100% - '+(cutY-sr.top)+'px) 0)';
+    paperSite.style.clipPath='inset(0 0 calc(100% - '+(cutY-sr.top+1)+'px) 0)';   // 1px overlap with the lower copy
     tCut.ready=true; setCut(tP);
   });
 }
 function setCut(p){
   tP=p; if(!tCut || !tCut.ready) return;
-  const {W,H,cutY,holder,flap,grad}=tCut, c=p*W+(p>0?2:0);
+  const {W,H,cutY,holder,flap,grad,under}=tCut, c=p*W+(p>0?2:0);
   const hole=cutPoly(W,H,c);
+  under.style.clipPath = hole.length>2 ? 'polygon('+hole.map(v=>v[0]+'px '+v[1]+'px').join(',')+')' : 'inset(0 0 100% 0)';
   holder.style.clipPath = hole.length>2
     ? 'path(evenodd,"M0 '+cutY+'H'+W+'V'+(cutY+H)+'H0Z M'+hole.map(v=>v[0]+' '+(v[1]+cutY)).join(' L')+'Z")'
     : 'inset('+cutY+'px 0 0 0)';
@@ -1548,7 +1551,7 @@ function cancelCut(){                               // let go too early: the cut
 function tearAway(){
   if(!tCut) return; tearing=true; cancelAnimationFrame(tRaf);
   const cut=tCut; setCut(1); cut.flap.setAttribute('d','');
-  cut.holder.style.clipPath='inset('+cut.cutY+'px 0 0 0)';
+  cut.holder.style.clipPath='inset('+cut.cutY+'px 0 0 0)'; cut.under.style.clipPath='none';
   penShow('fade', undefined, {alignSel:'.notice-head', alignTop:cut.headTop});
   cut.holder.style.animation='tearfall 1.4s cubic-bezier(.45,0,.9,.5) forwards';
   setTimeout(()=>{ cut.under.remove(); cut.svg.remove(); }, 850);
