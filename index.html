@@ -92,8 +92,13 @@ button,input,textarea{font-family:inherit;}
 .end-stage{position:relative; width:100%; aspect-ratio:3/2; background:#fff; overflow:hidden;}
 .end-stage .es{position:absolute; width:54%; height:57.4%; opacity:0; will-change:transform,opacity; display:block; max-width:none;}
 #es-a{left:3%;} #es-b{left:43%;}
-.end-line{text-align:center; margin:26px 0 0; font-size:1rem; letter-spacing:.05em; opacity:0; transition:opacity 1.6s ease;}
+.end-line{text-align:center; margin:26px 0 0; font-size:1rem; letter-spacing:.05em; opacity:0; transition:opacity 2.4s ease;}
 .end-line.show{opacity:1;}
+.mono{text-align:center; font-size:1rem; line-height:2.1; letter-spacing:.05em; max-height:0; opacity:0; overflow:hidden; margin:0; transition:max-height .9s ease, opacity 2.4s ease, margin .9s ease;}
+.mono.show{max-height:140px; opacity:1; margin:0 0 30px;}
+.end-mono{text-align:center; font-size:1rem; line-height:2.1; letter-spacing:.05em; margin:0 0 18px; opacity:0; transition:opacity 2.4s ease;}
+.end-mono.show{opacity:1;}
+.mono.mono-look.show{margin:30px 0 30px;}
 .true-wrap{height:0; opacity:0; overflow:hidden; margin-top:40px;}
 .true-wrap .vid-wrap{position:relative; width:100%; aspect-ratio:4/3;}
 .true-wrap.done{display:flex; flex-direction:column; justify-content:center;}
@@ -233,17 +238,21 @@ img{-webkit-touch-callout:none; -webkit-user-drag:none; user-select:none; -webki
 
   <p class="shop-line" id="shop-line"><a href="shop.html" id="shop-link" target="_blank">『紙とペン』購入サイト</a></p>
 
+  <p class="mono mono-look" id="mono-look">「とりあえず、見てみるか。」</p>
+
   <div class="field-stack">
     <div class="field" id="field-paper">
       <label>まずは受け止めてくれる紙を。</label>
       <div class="row"><input id="in-paper" placeholder="注文コードを入力"><button onclick="check('paper')">送信</button></div>
       <div class="msg" id="msg-paper"></div>
     </div>
+    <p class="mono mono-mid" id="mono-pen">「久しぶりに、自分も手紙書こうかな。」</p>
     <div class="field" id="field-pen">
       <label>次に言葉を託す1本を。</label>
       <div class="row"><input id="in-pen" placeholder="注文コードを入力"><button onclick="check('pen')">送信</button></div>
       <div class="msg" id="msg-pen"></div>
     </div>
+    <p class="mono mono-mid" id="mono-env">「あと、必要なのは……」</p>
     <div class="field" id="field-env">
       <label>最後に想いを包むものを。</label>
       <div class="row"><input id="in-env" placeholder="注文コードを入力"><button onclick="check('env')">送信</button></div>
@@ -256,10 +265,11 @@ img{-webkit-touch-callout:none; -webkit-user-drag:none; user-select:none; -webki
   </div>
 
   <div class="ending" id="ending">
+    <p class="end-mono" id="end-mono">「これで必要なものは揃った。<br>……ん？」</p>
     <div class="end-stage" id="end-stage" aria-hidden="true">
       <img class="es" id="es-a" alt=""><img class="es" id="es-b" alt="">
     </div>
-    <p class="end-line" id="end-line">この二つの便せん似てる？<br>でも、こんな黒い便箋なかったよな。</p>
+    <p class="end-line" id="end-line">「この二つの便せん似てる？<br>でも、こんな黒い便箋なかったよな。」</p>
   </div>
 
   <div class="share" id="share">
@@ -292,6 +302,7 @@ img{-webkit-touch-callout:none; -webkit-user-drag:none; user-select:none; -webki
   </div>
 
   <div class="true-wrap" id="true-wrap">
+    <p class="end-mono" id="true-mono">「……できた！」</p>
     <div class="stage"><div class="vid-wrap">
       <div class="intro-anim" id="true-anim" aria-hidden="true">
         <img class="ia ia-closed" alt="">
@@ -417,7 +428,7 @@ $('start-btn').addEventListener('click', ()=>{
 function onIntroEnd(){
   PG.intro=true; saveH();
   $('replay-btn').classList.add('show');
-  ['story','shop-line','field-paper'].forEach(id=>$(id).classList.add('show'));   // monologue, shop link and the first code box all appear together
+  ['story','shop-line','mono-look','field-paper'].forEach(id=>$(id).classList.add('show'));   // monologue, shop link and the first code box all appear together
 }
 $('replay-btn').addEventListener('click', ()=>{ $('replay-btn').classList.remove('show'); playIntro(); });
 
@@ -436,11 +447,11 @@ function check(which){
   if(editMode){ editCheck(which); return; }
   if(which==='paper'){
     const k = KNOWN_PAPER[hc($('in-paper').value.trim())];
-    verdict('msg-paper', !!k); if(k){ paperKind=k; lockBox('paper'); show('field-pen'); }
+    verdict('msg-paper', !!k); if(k){ paperKind=k; lockBox('paper'); show('mono-pen'); setTimeout(()=>show('field-pen'), 1300); }
   }
   if(which==='pen'){
     const k = KNOWN_PEN[hc($('in-pen').value.trim())];
-    verdict('msg-pen', !!k); if(k){ penInk=k; lockBox('pen'); show('field-env'); }
+    verdict('msg-pen', !!k); if(k){ penInk=k; lockBox('pen'); show('mono-env'); setTimeout(()=>show('field-env'), 1300); }
   }
   if(which==='env'){
     const k = KNOWN_ENV[hc($('in-env').value.trim())];
@@ -474,7 +485,8 @@ let stopEnding = ()=>{}, endingTimer = 0;
 function playEnding(){
   ES.a.src = LETTER[paperKind];
   stopEnding(); clearTimeout(endingTimer); drawEnding(0);
-  $('end-line').classList.remove('show');
+  $('end-line').classList.remove('show'); $('end-mono').classList.remove('show');
+  setTimeout(()=>$('end-mono').classList.add('show'), 300);
   $('ending').classList.add('show');
   setTimeout(()=>{ scrollToCenter($('ending')); }, 350);
   endingTimer = setTimeout(()=>{
@@ -576,6 +588,11 @@ $('redo-link').addEventListener('click', ()=>enterEdit(true));
 function enterEdit(scroll){
   editMode = true; PG.edit=true; saveH();
   ['paper','pen','env','more'].forEach(w=>lockBox(w, false));
+  document.querySelectorAll('.mono-mid').forEach(m=>m.classList.remove('show'));   // the lines between the boxes get in the way while rewriting
+  if(PG.fromMore){                                                                  // so does the normal-end scene left above the 4th box
+    if($('ending').offsetHeight>0) slideClose($('ending'), scroll ? 800 : 0); else $('ending').style.marginTop='0px';
+    const mb=$('field-more').parentNode; mb.style.transition = scroll ? 'margin-top 800ms cubic-bezier(.4,0,.2,1)' : 'none'; mb.style.marginTop='0px';
+  }
   const box=$('field-more').parentNode;
   if(!$('field-more').classList.contains('show')){   // 宵闇 from the start: the 4th box slides in under the 3rd
     $('field-env').parentNode.after(box); box.style.marginTop='0px';
@@ -634,9 +651,7 @@ function startTrueEnd(fromMore){
   if(fromMore){
     // the comparison scene and End. fold away; the code box below glides up under the envelope box
     $('in-more').readOnly = true; $('in-more').blur(); $('in-more').classList.add('locked'); $('in-more').nextElementSibling.disabled = true;
-    slideClose($('ending'), 900); slideClose($('share'), 900);
-    const box=$('field-more').parentNode;
-    box.style.transition='margin-top 900ms cubic-bezier(.4,0,.2,1)'; box.style.marginTop='0px';
+    slideClose($('share'), 900);               // only End？ and its buttons fold away; the comparison scene and its lines stay
     wait = 1000;
   } else {
     $('field-env').parentNode.after(tw);
@@ -645,6 +660,7 @@ function startTrueEnd(fromMore){
   setScene(TA, envKind || 'tori', A.l_blank, INK_EX[penInk || 'susudama']);
   drawTrue(0);
   setTimeout(()=>{ slideOpen(tw, 900); }, wait);
+  setTimeout(()=>{ $('true-mono').classList.add('show'); }, wait+500);
   setTimeout(()=>{ scrollToCenter(tw, 1200); }, wait+200);
   setTimeout(()=>{
     $('true-anim').classList.add('on');
@@ -747,15 +763,15 @@ document.addEventListener('visibilitychange', ()=>{ if(document.hidden) saveH();
     paperKind=d.paperKind||null; penInk=d.penInk||null; envKind=d.envKind||null;
     // the opening scene, already played
     stopIntro(); layer.classList.add('playing'); drawEnv(IA, ENV_LEN);
-    ['replay-btn','story','shop-line','field-paper'].forEach(id=>$(id).classList.add('show'));
+    ['replay-btn','story','shop-line','mono-look','field-paper'].forEach(id=>$(id).classList.add('show'));
     const done = w => KNOWN_PAPER && $('in-'+w).value.trim() !== '';
-    if(paperKind && done('paper')){ lockBox('paper'); show('field-pen'); verdict('msg-paper', true); }
-    if(penInk && done('pen')){ lockBox('pen'); show('field-env'); verdict('msg-pen', true); }
+    if(paperKind && done('paper')){ lockBox('paper'); show('mono-pen'); show('field-pen'); verdict('msg-paper', true); }
+    if(penInk && done('pen')){ lockBox('pen'); show('mono-env'); show('field-env'); verdict('msg-pen', true); }
     if(envKind && done('env')){ lockBox('env'); show('buy-wrap'); verdict('msg-env', true); }
     if(PG.bought) $('buy-wrap').style.display='none';
     if(PG.bought && !PG.trueDone){
       ES.a.src = LETTER[paperKind]; drawEnding(ENDING_LEN);
-      $('ending').classList.add('show'); $('end-line').classList.add('show');
+      $('ending').classList.add('show'); $('end-line').classList.add('show'); $('end-mono').classList.add('show');
       setShare(false);
       if(PG.rebuy){ show('field-more'); }
     }
@@ -764,12 +780,12 @@ document.addEventListener('visibilitychange', ()=>{ if(document.hidden) saveH();
       const tw=$('true-wrap'), st=tw.querySelector('.stage'), sh=$('share');
       if(PG.fromMore){
         show('field-more'); lockBox('more'); verdict('msg-more', true);
-        $('field-more').parentNode.style.marginTop='0px';
+        if(!PG.edit){ ES.a.src = LETTER[paperKind]; drawEnding(ENDING_LEN); $('ending').classList.add('show'); $('end-line').classList.add('show'); $('end-mono').classList.add('show'); }
       } else {
         $('field-env').parentNode.after(tw);
         $('ending').style.marginTop='0px'; $('field-more').parentNode.style.marginTop='0px';
       }
-      tw.style.transition='none'; tw.style.height='auto'; tw.style.opacity='1'; tw.classList.add('done');
+      tw.style.transition='none'; tw.style.height='auto'; tw.style.opacity='1'; tw.classList.add('done'); $('true-mono').classList.add('show');
       st.style.display='none';
       document.body.classList.add('true-end','te-seen');
       document.querySelector('.side-tab[data-drawer="drawer-howto"]').classList.add('inv');
